@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 20 Amino Acids — Study &amp; Quiz</title>
+<meta name="description" content="Structures, codes, etymology and an adaptive quiz for the twenty proteinogenic amino acids.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <div class="mark">R</div>
+      <div>
+        <h1>The 20 Amino Acids</h1>
+        <div class="sub">structure · codes · etymology</div>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button id="tab-study" role="tab" aria-selected="true">Study</button>
+      <button id="tab-journey" role="tab" aria-selected="false">Journey</button>
+      <button id="tab-quiz"  role="tab" aria-selected="false">Quiz</button>
+      <button id="tab-table" role="tab" aria-selected="false">Table</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="view-study" role="tabpanel" aria-labelledby="tab-study"></section>
+  <section id="view-journey" role="tabpanel" aria-labelledby="tab-journey" hidden></section>
+  <section id="view-quiz"  role="tabpanel" aria-labelledby="tab-quiz" hidden></section>
+  <section id="view-table" role="tabpanel" aria-labelledby="tab-table" hidden></section>
+  <footer class="foot">
+    Two ways to draw the same molecule, switchable in the Study toolbar. <b>Skeletal</b> is the abstract view —
+    bonds as lines, carbons implied, backbone greyed out with an <b>R</b> marker where the side chain begins.
+    <b>Textbook</b> is the explicit view — the backbone written out as ⁻OOC–Cα(–H)–NH₃⁺ with every atom of the side
+    chain stacked above it and boxed in the class colour. Both show the free amino acid at pH 7; bond lengths and
+    angles are identical across all twenty so shapes can be compared directly. Histidine is drawn as the neutral
+    Nε2–H tautomer in skeletal style and as the protonated imidazolium in textbook style, matching each convention.
+  </footer>
+</main>
+
+<script src="js/chem.js"></script>
+<script src="js/data.js"></script>
+<script src="js/structures.js"></script>
+<script src="js/textbook.js"></script>
+<script src="js/store.js"></script>
+<script src="js/study.js"></script>
+<script src="js/journey.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
