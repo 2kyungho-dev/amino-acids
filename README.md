@@ -7,8 +7,11 @@ plus an adaptive multiple-choice/typed quiz that remembers what you keep missing
 
 Open `index.html` in a browser — no server, no build step, no dependencies.
 
-For a version you can email or copy onto a phone, run `python3 build.py`
-and use the self-contained `dist/amino-acids.html`.
+Run `python3 build.py` before every commit. It stamps the `css`/`js` links in
+`index.html` with a hash of their contents — GitHub Pages serves everything
+with `max-age=600`, so without the stamp a returning visitor runs new HTML
+against ten-minute-old JS — and it writes the self-contained
+`dist/amino-acids.html` you can email or copy onto a phone.
 
 ## Layout
 
