@@ -62,8 +62,15 @@ window.Codes = (function () {
     if (!built) {
       root.innerHTML =
         '<p class="section-d" style="margin-top:10px">' +
-          '곁사슬 뼈대만 짧은 문자열로 적는 방식입니다. 숫자는 탄소 개수, 나머지 기호는 붙어 있는 작용기예요. ' +
-          '이름 ↔ 코드는 <b>Quiz</b> 탭의 “Name → code” / “Code → name” 유형으로 연습할 수 있습니다.' +
+          '곁사슬 뼈대만 짧은 문자열로 적는 방식입니다. <b>숫자는 교과서식 그림에서 한 줄에 놓인 탄소 개수를 ' +
+          '아래에서 위로 적은 것</b>이에요 — Leucine은 CH₂ / CH / (H₃C CH₃)라서 <b>112</b>, Isoleucine은 맨 아랫줄이 ' +
+          'H₃C–CH로 둘이라 <b>211</b>. 나머지 기호는 그 줄에 붙어 있는 작용기입니다. ' +
+          'Study 탭에서 그림을 <b>Textbook</b>으로 바꾸면 이 줄들이 그대로 보입니다.' +
+        '</p>' +
+        '<p class="section-d cexc">' +
+          '규칙에서 벗어나는 것들: <b>Thr = 11</b> 은 –OH를 빼고 탄소만 셉니다(1O1로 쓰면 헷갈려서). ' +
+          '<b>Asn·Gln(1CON·2CON)</b> 과 <b>Asp·Glu(1카·2카)</b> 는 줄마다 세는 대신 탄소 개수를 한 자리로 묶어 ' +
+          '두 짝이 나란히 보이게 했습니다.' +
         '</p>' +
         legend() +
         '<div class="toolbar"><div class="chips">' +

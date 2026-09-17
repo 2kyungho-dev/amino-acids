@@ -434,3 +434,5 @@ body[data-diagram="textbook"] .miss .mp{width:92px}
 .typed.scode{max-width:400px}
 .typed.scode input{font-size:1.3rem;letter-spacing:.06em;text-transform:none}
 .typed.scode input::placeholder{font-size:.82rem;letter-spacing:0;color:var(--dim2)}
+
+.section-d.cexc{border-left:2px solid var(--line-str);padding-left:12px;font-size:.88rem;margin-top:-6px}
