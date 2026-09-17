@@ -395,6 +395,57 @@ body[data-diagram="textbook"] .miss .mp{width:92px}
 .typed.wide input{font-size:1.05rem;text-align:left;text-transform:none;padding-left:16px;font-family:var(--serif)}
 .typed.wide input::placeholder{font-family:var(--mono);font-size:.8rem;color:var(--dim2)}
 
+/* ---------- structure code sheet ---------- */
+.ckeys{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin:16px 0 4px;
+  padding:14px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
+}
+.ckey{display:flex;align-items:baseline;gap:10px;min-width:0}
+.ckey b{
+  font-family:var(--mono);font-size:.95rem;color:var(--nonpolar);flex:none;
+  min-width:34px;text-align:center;background:var(--surface2);border:1px solid var(--line);
+  border-radius:6px;padding:2px 6px;
+}
+.ckey span{font-size:.86rem;color:var(--dim)}
+
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px;margin-top:12px}
+.ccard{
+  position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px;display:flex;flex-direction:column;gap:9px;cursor:pointer;transition:border-color .18s;
+}
+.ccard:hover{border-color:color-mix(in srgb,var(--acc) 45%,var(--line))}
+.ccode{
+  font-family:var(--mono);font-size:1.55rem;font-weight:600;letter-spacing:.04em;
+  color:var(--acc);text-align:center;padding:6px 0;transition:filter .2s,opacity .2s;
+}
+.cpanel{background:var(--paper);border-radius:8px;padding:3px;transition:filter .2s,opacity .2s}
+.cmeta{display:flex;align-items:center;gap:8px;transition:filter .2s,opacity .2s}
+.cmeta .cn{font-size:.98rem}
+.cmeta .cc{font-family:var(--mono);font-size:.72rem;color:var(--dim2)}
+.chint{margin:0;font-size:.8rem;color:var(--dim);line-height:1.5}
+.cveil{display:none}
+.hide-code .ccard:not(.shown) .ccode,
+.hide-name .ccard:not(.shown) .cpanel,
+.hide-name .ccard:not(.shown) .cmeta,
+.hide-name .ccard:not(.shown) .chint{filter:blur(9px);opacity:.45}
+.hide-code .ccard:not(.shown) .chint{filter:blur(6px);opacity:.4}
+.hide-code .ccard:not(.shown) .cveil,
+.hide-name .ccard:not(.shown) .cveil{
+  display:block;position:absolute;right:12px;top:10px;
+  font-family:var(--mono);font-size:.62rem;color:var(--dim2);
+}
+.cph{margin:34px 0 0;font-size:1rem}
+.cpairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:12px}
+.cpair{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 14px}
+.cpairhd{display:flex;align-items:center;gap:8px;font-size:.95rem;margin-bottom:5px}
+.cpairhd i{color:var(--dim2);font-style:normal}
+.cpair p{margin:0;font-size:.85rem;color:var(--dim);line-height:1.55}
+.cpair b{font-family:var(--mono);color:var(--text);font-weight:600}
+
+.typed.scode{max-width:400px}
+.typed.scode input{font-size:1.3rem;letter-spacing:.06em;text-transform:none}
+.typed.scode input::placeholder{font-size:.82rem;letter-spacing:0;color:var(--dim2)}
+
 </style>
 </head>
 <body>
@@ -410,6 +461,7 @@ body[data-diagram="textbook"] .miss .mp{width:92px}
     </div>
     <nav class="tabs" role="tablist">
       <button id="tab-study" role="tab" aria-selected="true">Study</button>
+      <button id="tab-codes" role="tab" aria-selected="false">Code</button>
       <button id="tab-journey" role="tab" aria-selected="false">Journey</button>
       <button id="tab-quiz"  role="tab" aria-selected="false">Quiz</button>
       <button id="tab-table" role="tab" aria-selected="false">Table</button>
@@ -419,6 +471,7 @@ body[data-diagram="textbook"] .miss .mp{width:92px}
 
 <main class="wrap">
   <section id="view-study" role="tabpanel" aria-labelledby="tab-study"></section>
+  <section id="view-codes" role="tabpanel" aria-labelledby="tab-codes" hidden></section>
   <section id="view-journey" role="tabpanel" aria-labelledby="tab-journey" hidden></section>
   <section id="view-quiz"  role="tabpanel" aria-labelledby="tab-quiz" hidden></section>
   <section id="view-table" role="tabpanel" aria-labelledby="tab-table" hidden></section>
@@ -887,6 +940,77 @@ window.JOURNEY = [
     var a = byKey[j.key];
     if (a) { a.mnemo = j; a.step = i + 1; }
   });
+})();
+
+/* =========================================================================
+   Structure codes — a shorthand for the side-chain skeleton, so the shape
+   can be recalled from the name (and back) without drawing anything.
+      1 = one carbon      O = –OH        S = sulfur      N = chain –NH–
+      0 = no side chain   카 = –COO⁻     아 = –NH₃⁺      CON = amide
+      헥 = six-ring       펜 = five-ring
+   ========================================================================= */
+window.CODE_KEY = [
+  { s:'1',   m:'탄소 하나',            e:'one carbon in the chain' },
+  { s:'0',   m:'곁사슬 없음 (–H)',     e:'no side chain at all' },
+  { s:'O',   m:'하이드록시 –OH',       e:'hydroxyl' },
+  { s:'S',   m:'황 –SH / –S–',         e:'sulfur' },
+  { s:'N',   m:'사슬 중간의 –NH–',     e:'nitrogen inside the chain' },
+  { s:'CON', m:'아마이드 –CONH₂',      e:'amide' },
+  { s:'카',  m:'카복실기 –COO⁻',       e:'carboxylate' },
+  { s:'아',  m:'아민 –NH₃⁺',           e:'amine' },
+  { s:'헥',  m:'육각 고리 (벤젠)',      e:'six-membered ring' },
+  { s:'펜',  m:'오각 고리',            e:'five-membered ring' }
+];
+
+/* typing 헥/펜/카/아 needs a Korean keyboard, so these spellings count too */
+window.CODE_ROMAN = { '헥':'hex', '펜':'pen', '카':'cooh', '아':'nh3' };
+
+window.CODES = {
+  Gly:{ c:'0',      h:'곁사슬이 수소 하나뿐 — 탄소 0개.' },
+  Ala:{ c:'1',      h:'탄소 하나(–CH₃)가 전부.' },
+  Val:{ c:'12',     h:'탄소 하나에서 갈라져 메틸 둘. Pro의 21과 뒤집힌 짝.' },
+  Leu:{ c:'112',    h:'한 칸 더 간 뒤 메틸 둘. Ile의 211과 뒤집힌 짝.' },
+  Ile:{ c:'211',    h:'Leu(112)를 뒤집은 모양 — 갈라짐이 먼저 온다.' },
+  Pro:{ c:'21',     h:'탄소 셋이 고리를 이뤄 골격 N으로 돌아간다. Val의 12와 뒤집힌 짝.' },
+  Cys:{ c:'1S',     h:'탄소 하나 + 황(–SH). Ser의 1O에서 O만 S로.' },
+  Met:{ c:'11S1',   h:'탄소 둘 + 황 + 메틸. 황이 사슬 끝이 아니라 안쪽에 있다.' },
+  Phe:{ c:'1헥',    h:'탄소 하나 + 육각 고리.' },
+  Trp:{ c:'1헥펜',  h:'탄소 하나 + 육각·오각이 붙은 두 고리(인돌).' },
+  Ser:{ c:'1O',     h:'탄소 하나 + –OH.' },
+  Thr:{ c:'11',     h:'탄소 하나에 –OH와 메틸이 함께 붙는다.' },
+  Tyr:{ c:'1헥O',   h:'Phe(1헥)에 –OH 하나가 더 붙은 것.' },
+  Asn:{ c:'1CON',   h:'탄소 하나 + 아마이드. Gln의 2CON과 한 칸 차이.' },
+  Gln:{ c:'2CON',   h:'Asn(1CON)보다 탄소가 하나 더.' },
+  Lys:{ c:'1111아', h:'탄소 넷을 쭉 간 뒤 아민. 곁사슬 중 가장 긴 직선.' },
+  Arg:{ c:'111N1아',h:'탄소 셋 + N + 탄소 + 아민 — 끝이 구아니디늄.' },
+  His:{ c:'1펜',    h:'탄소 하나 + 오각 고리(이미다졸).' },
+  Asp:{ c:'1카',    h:'탄소 하나 + 카복실기. Glu의 2카와 한 칸 차이.' },
+  Glu:{ c:'2카',    h:'Asp(1카)보다 탄소가 하나 더.' }
+};
+
+/* the pairs worth memorising together */
+window.CODE_PAIRS = [
+  { a:'Leu', b:'Ile', note:'<b>112 ↔ 211</b> — 뒤집으면 서로가 된다. 실제로도 서로 이성질체.' },
+  { a:'Val', b:'Pro', note:'<b>12 ↔ 21</b> — 역시 뒤집힌 관계.' },
+  { a:'Ser', b:'Cys', note:'<b>1O ↔ 1S</b> — O 자리에 S만 바뀐 꼴.' },
+  { a:'Asp', b:'Glu', note:'<b>1카 → 2카</b> — 탄소 하나 차이.' },
+  { a:'Asn', b:'Gln', note:'<b>1CON → 2CON</b> — 위와 똑같은 규칙.' },
+  { a:'Phe', b:'Tyr', note:'<b>1헥 → 1헥O</b> — –OH 하나가 붙으면 타이로신.' }
+];
+
+(function () {
+  window.AA.forEach(function (a) {
+    var c = window.CODES[a.key];
+    if (c) { a.scode = c.c; a.scodeNote = c.h; }
+  });
+  /* the same code written without Korean, for typed answers */
+  window.romanCode = function (code) {
+    var out = String(code);
+    Object.keys(window.CODE_ROMAN).forEach(function (k) {
+      out = out.split(k).join(window.CODE_ROMAN[k]);
+    });
+    return out;
+  };
 })();
 
 </script>
@@ -1480,6 +1604,103 @@ window.Study = (function () {
 </script>
 <script>
 /* =========================================================================
+   codes.js — the structure-code sheet. Every side chain written as a short
+   string, with the notation key and the pairs worth learning together.
+   Two self-test modes hide one column so the other can be recalled.
+   ========================================================================= */
+window.Codes = (function () {
+  'use strict';
+  var built = false, hide = 'none';        // 'none' | 'code' | 'name'
+
+  function byKey(k) { return window.AA.filter(function (a) { return a.key === k; })[0]; }
+
+  function legend() {
+    return '<div class="ckeys">' + window.CODE_KEY.map(function (k) {
+      return '<div class="ckey"><b>' + k.s + '</b><span>' + k.m + '</span></div>';
+    }).join('') + '</div>';
+  }
+
+  function card(a) {
+    var cat = window.CAT[a.cat];
+    return '<article class="ccard" style="--acc:' + cat.color + '" data-key="' + a.key + '">' +
+      '<div class="ccode">' + a.scode + '</div>' +
+      '<div class="cpanel">' + window.art(a) + '</div>' +
+      '<div class="cmeta">' +
+        '<span class="badge sm">' + a.one + '</span>' +
+        '<span class="cn">' + a.name + '</span><span class="cc">' + a.three + '</span>' +
+      '</div>' +
+      '<p class="chint">' + a.scodeNote + '</p>' +
+      '<span class="cveil">tap to reveal</span>' +
+    '</article>';
+  }
+
+  function pairs() {
+    return '<div class="cpairs">' + window.CODE_PAIRS.map(function (p) {
+      var x = byKey(p.a), y = byKey(p.b);
+      return '<div class="cpair">' +
+        '<div class="cpairhd"><span>' + x.name + '</span><i>·</i><span>' + y.name + '</span></div>' +
+        '<p>' + p.note + '</p></div>';
+    }).join('') + '</div>';
+  }
+
+  function body() {
+    var out = '';
+    window.CAT_ORDER.forEach(function (c) {
+      var items = window.AA.filter(function (a) { return a.cat === c; });
+      var i = window.CAT[c];
+      out += '<section style="--acc:' + i.color + '">' +
+        '<div class="section-h"><span class="dot"></span><h2>' + i.label + '</h2>' +
+        '<span class="n">' + items.length + '</span></div>' +
+        '<div class="cgrid">' + items.map(card).join('') + '</div></section>';
+    });
+    return out;
+  }
+
+  function paint() {
+    var list = document.getElementById('codes-list');
+    list.className = hide === 'none' ? '' : 'hide-' + hide;
+    list.innerHTML = body();
+  }
+
+  function render() {
+    var root = document.getElementById('view-codes');
+    if (!built) {
+      root.innerHTML =
+        '<p class="section-d" style="margin-top:10px">' +
+          '곁사슬 뼈대만 짧은 문자열로 적는 방식입니다. 숫자는 탄소 개수, 나머지 기호는 붙어 있는 작용기예요. ' +
+          '이름 ↔ 코드는 <b>Quiz</b> 탭의 “Name → code” / “Code → name” 유형으로 연습할 수 있습니다.' +
+        '</p>' +
+        legend() +
+        '<div class="toolbar"><div class="chips">' +
+          '<button class="chip plain" data-hide="code" aria-pressed="false">코드 가리기</button>' +
+          '<button class="chip plain" data-hide="name" aria-pressed="false">이름·그림 가리기</button>' +
+        '</div><span class="jhint">카드를 누르면 가려진 쪽이 열립니다.</span></div>' +
+        '<div id="codes-list"></div>' +
+        '<h3 class="cph">같이 외우면 좋은 짝</h3>' + pairs();
+      built = true;
+      root.querySelectorAll('[data-hide]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          hide = (hide === b.dataset.hide) ? 'none' : b.dataset.hide;
+          root.querySelectorAll('[data-hide]').forEach(function (x) {
+            x.setAttribute('aria-pressed', String(x.dataset.hide === hide));
+          });
+          paint();
+        });
+      });
+      root.addEventListener('click', function (e) {
+        var c = e.target.closest ? e.target.closest('.ccard') : null;
+        if (c) c.classList.toggle('shown');
+      });
+    }
+    paint();
+  }
+
+  return { render: render, refresh: function () { if (built) paint(); } };
+})();
+
+</script>
+<script>
+/* =========================================================================
    journey.js — the memory palace walk-through: 20 steps, in order, grouped
    by room. "이름 가리기" blurs the amino acid so you can test yourself on
    each cue before revealing it.
@@ -1584,7 +1805,9 @@ window.Quiz = (function () {
     { id: 'one2name',    label: '1-letter → name',   d: 'F, W, Q, K…' },
     { id: 'name2one',    label: 'Name → 1-letter',   d: 'The tricky half of the codes' },
     { id: 'name2three',  label: 'Name → 3-letter',   d: 'Asn vs Asp, Gln vs Glu' },
-    { id: 'category',    label: 'Class',             d: 'Nonpolar / polar / basic / acidic' }
+    { id: 'category',    label: 'Class',             d: 'Nonpolar / polar / basic / acidic' },
+    { id: 'name2scode',  label: 'Name → code',       d: '이름 → 구조 코드 (112, 1헥…)' },
+    { id: 'scode2name',  label: 'Code → name',       d: '구조 코드 → 이름' }
   ];
   var DEFAULT = {
     len: 20, types: TYPES.map(function (t) { return t.id; }),
@@ -1598,6 +1821,14 @@ window.Quiz = (function () {
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
   function strip(s) { return String(s).replace(/<[^>]+>/g, ''); }
   function norm(x) { return String(x).toLowerCase().replace(/[\s\-.,'’·]/g, ''); }
+  /* structure codes: letter O and digit 0 are interchangeable when typed */
+  function normCode(x) { return norm(x).replace(/o/g, '0'); }
+  function codeWords(a) { return [a.scode, window.romanCode(a.scode)]; }
+  function otherCodes(target) {
+    var out = [];
+    window.AA.forEach(function (a) { if (a.key !== target.key) out = out.concat(codeWords(a)); });
+    return out;
+  }
 
   function editDist(a, b) {
     var d = [], i, j;
@@ -1733,6 +1964,18 @@ window.Quiz = (function () {
                window.AA.filter(function (a) { return a.key !== target.key; }).map(function (a) { return a[field]; }));
       opts = codeDistractors(target, field).map(function (v) { return { t: v, ok: false, mono: true }; });
       opts.push({ t: target[field], ok: true, mono: true });
+    } else if (type === 'name2scode') {
+      q.prompt = '<b>' + target.name + '</b> 의 구조 코드는?';
+      typedAs(q, 'scode', target.scode, codeWords(target), otherCodes(target));
+      q.codeAnswer = true;
+      opts = shuffle(window.AA.filter(function (a) { return a.key !== target.key; }))
+             .slice(0, 3).map(function (a) { return { t: a.scode, ok: false, mono: true }; });
+      opts.push({ t: target.scode, ok: true, mono: true });
+    } else if (type === 'scode2name') {
+      q.prompt = '이 구조 코드는 어떤 아미노산?<span class="big">' + esc(target.scode) + '</span>';
+      typedAs(q, 'name', target.name, nameWords(target), otherNames(target));
+      opts = otherAA(target, 3, false).map(function (a) { return { t: a.name, ok: false }; });
+      opts.push({ t: target.name, ok: true });
     } else /* category */ {
       q.prompt = 'Which class does <b>' + target.name + '</b> belong to?';
       q.panel = panel(target);
@@ -1741,7 +1984,9 @@ window.Quiz = (function () {
     }
     q.options = type === 'category' ? opts : shuffle(opts);
     q.answer = (q.options.filter(function (o) { return o.ok; })[0] || {}).t;
-    q.explain = (type === 'name2one' || type === 'name2three' || type === 'one2name') ? target.codeNote
+    q.explain = (type === 'name2scode' || type === 'scode2name')
+                ? '<span style="font-family:var(--mono);color:var(--nonpolar)">' + esc(target.scode) + '</span> — ' + target.scodeNote
+              : (type === 'name2one' || type === 'name2three' || type === 'one2name') ? target.codeNote
               : type === 'category' ? (target.catNote || window.CAT[target.cat].desc)
               : target.chem;
     return q;
@@ -1873,13 +2118,15 @@ window.Quiz = (function () {
 
     var body;
     if (q.typed) {
-      var code = q.typedKind === 'code';
-      var ph = code ? (q.answerText.length === 1 ? '?' : '???')
-             : q.typedKind === 'cat' ? 'nonpolar / polar / basic / acidic'
+      var kind = q.typedKind;
+      var ph = kind === 'code' ? (q.answerText.length === 1 ? '?' : '???')
+             : kind === 'scode' ? '예: 112, 1헥, 1111아'
+             : kind === 'cat' ? 'nonpolar / polar / basic / acidic'
              : 'name, or its 1- or 3-letter code';
-      body = '<form class="typed' + (code ? '' : ' wide') + '" id="typedform">' +
-             '<input id="typedin" ' + (code ? 'maxlength="3" ' : '') + 'autocomplete="off" ' +
-             'autocapitalize="' + (code ? 'characters' : 'none') + '" spellcheck="false" ' +
+      var cls = kind === 'code' ? '' : kind === 'scode' ? ' scode' : ' wide';
+      body = '<form class="typed' + cls + '" id="typedform">' +
+             '<input id="typedin" ' + (kind === 'code' ? 'maxlength="3" ' : '') + 'autocomplete="off" ' +
+             'autocapitalize="' + (kind === 'code' ? 'characters' : 'none') + '" spellcheck="false" ' +
              'placeholder="' + ph + '">' +
              '<button class="btn primary" type="submit">Check</button></form>';
     } else {
@@ -1963,10 +2210,13 @@ window.Quiz = (function () {
     var q = st.qs[st.i], inp = document.getElementById('typedin');
     var given = inp.value.trim();
     if (!given) { inp.focus(); return; }
-    var g = norm(given), ok = false, fuzzy = false;
-    var dMine = bestDist(g, q.accept), dOther = bestDist(g, q.reject);
+    var f = q.codeAnswer ? normCode : norm;
+    var g = f(given), ok = false, fuzzy = false;
+    var acc = q.codeAnswer ? q.accept.map(normCode) : q.accept;
+    var rej = q.codeAnswer ? q.reject.map(normCode) : q.reject;
+    var dMine = bestDist(g, acc), dOther = bestDist(g, rej);
     if (dMine === 0) ok = true;
-    else if (dOther > 0 && dMine <= tolerance(g) && dMine < dOther) { ok = true; fuzzy = true; }
+    else if (!q.codeAnswer && dOther > 0 && dMine <= tolerance(g) && dMine < dOther) { ok = true; fuzzy = true; }
     inp.disabled = true;
     inp.classList.add(ok ? 'correct' : 'wrong');
     if (!ok) inp.value = q.answerText;
@@ -2064,7 +2314,7 @@ window.Quiz = (function () {
 /* app.js — view switching + boot */
 (function () {
   'use strict';
-  var VIEWS = ['study', 'journey', 'quiz', 'table'];
+  var VIEWS = ['study', 'codes', 'journey', 'quiz', 'table'];
 
   function show(name) {
     VIEWS.forEach(function (v) {
@@ -2075,6 +2325,7 @@ window.Quiz = (function () {
     if (name === 'quiz') window.Quiz.render();
     if (name === 'study') window.Study.refresh();
     if (name === 'journey') window.Journey.render();
+    if (name === 'codes') window.Codes.render();
     if (location.hash.slice(1) !== name) history.replaceState(null, '', '#' + name);
     window.scrollTo({ top: 0 });
   }
@@ -2090,6 +2341,7 @@ window.Quiz = (function () {
     window.Study.refresh();
     window.Study.renderTable();
     window.Journey.refresh();
+    window.Codes.refresh();
   };
 
   document.body.dataset.diagram = window.DIAGRAM;

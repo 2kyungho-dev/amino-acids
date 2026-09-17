@@ -1,7 +1,7 @@
 /* app.js — view switching + boot */
 (function () {
   'use strict';
-  var VIEWS = ['study', 'journey', 'quiz', 'table'];
+  var VIEWS = ['study', 'codes', 'journey', 'quiz', 'table'];
 
   function show(name) {
     VIEWS.forEach(function (v) {
@@ -12,6 +12,7 @@
     if (name === 'quiz') window.Quiz.render();
     if (name === 'study') window.Study.refresh();
     if (name === 'journey') window.Journey.render();
+    if (name === 'codes') window.Codes.render();
     if (location.hash.slice(1) !== name) history.replaceState(null, '', '#' + name);
     window.scrollTo({ top: 0 });
   }
@@ -27,6 +28,7 @@
     window.Study.refresh();
     window.Study.renderTable();
     window.Journey.refresh();
+    window.Codes.refresh();
   };
 
   document.body.dataset.diagram = window.DIAGRAM;

@@ -202,3 +202,74 @@ window.JOURNEY = [
     if (a) { a.mnemo = j; a.step = i + 1; }
   });
 })();
+
+/* =========================================================================
+   Structure codes — a shorthand for the side-chain skeleton, so the shape
+   can be recalled from the name (and back) without drawing anything.
+      1 = one carbon      O = –OH        S = sulfur      N = chain –NH–
+      0 = no side chain   카 = –COO⁻     아 = –NH₃⁺      CON = amide
+      헥 = six-ring       펜 = five-ring
+   ========================================================================= */
+window.CODE_KEY = [
+  { s:'1',   m:'탄소 하나',            e:'one carbon in the chain' },
+  { s:'0',   m:'곁사슬 없음 (–H)',     e:'no side chain at all' },
+  { s:'O',   m:'하이드록시 –OH',       e:'hydroxyl' },
+  { s:'S',   m:'황 –SH / –S–',         e:'sulfur' },
+  { s:'N',   m:'사슬 중간의 –NH–',     e:'nitrogen inside the chain' },
+  { s:'CON', m:'아마이드 –CONH₂',      e:'amide' },
+  { s:'카',  m:'카복실기 –COO⁻',       e:'carboxylate' },
+  { s:'아',  m:'아민 –NH₃⁺',           e:'amine' },
+  { s:'헥',  m:'육각 고리 (벤젠)',      e:'six-membered ring' },
+  { s:'펜',  m:'오각 고리',            e:'five-membered ring' }
+];
+
+/* typing 헥/펜/카/아 needs a Korean keyboard, so these spellings count too */
+window.CODE_ROMAN = { '헥':'hex', '펜':'pen', '카':'cooh', '아':'nh3' };
+
+window.CODES = {
+  Gly:{ c:'0',      h:'곁사슬이 수소 하나뿐 — 탄소 0개.' },
+  Ala:{ c:'1',      h:'탄소 하나(–CH₃)가 전부.' },
+  Val:{ c:'12',     h:'탄소 하나에서 갈라져 메틸 둘. Pro의 21과 뒤집힌 짝.' },
+  Leu:{ c:'112',    h:'한 칸 더 간 뒤 메틸 둘. Ile의 211과 뒤집힌 짝.' },
+  Ile:{ c:'211',    h:'Leu(112)를 뒤집은 모양 — 갈라짐이 먼저 온다.' },
+  Pro:{ c:'21',     h:'탄소 셋이 고리를 이뤄 골격 N으로 돌아간다. Val의 12와 뒤집힌 짝.' },
+  Cys:{ c:'1S',     h:'탄소 하나 + 황(–SH). Ser의 1O에서 O만 S로.' },
+  Met:{ c:'11S1',   h:'탄소 둘 + 황 + 메틸. 황이 사슬 끝이 아니라 안쪽에 있다.' },
+  Phe:{ c:'1헥',    h:'탄소 하나 + 육각 고리.' },
+  Trp:{ c:'1헥펜',  h:'탄소 하나 + 육각·오각이 붙은 두 고리(인돌).' },
+  Ser:{ c:'1O',     h:'탄소 하나 + –OH.' },
+  Thr:{ c:'11',     h:'탄소 하나에 –OH와 메틸이 함께 붙는다.' },
+  Tyr:{ c:'1헥O',   h:'Phe(1헥)에 –OH 하나가 더 붙은 것.' },
+  Asn:{ c:'1CON',   h:'탄소 하나 + 아마이드. Gln의 2CON과 한 칸 차이.' },
+  Gln:{ c:'2CON',   h:'Asn(1CON)보다 탄소가 하나 더.' },
+  Lys:{ c:'1111아', h:'탄소 넷을 쭉 간 뒤 아민. 곁사슬 중 가장 긴 직선.' },
+  Arg:{ c:'111N1아',h:'탄소 셋 + N + 탄소 + 아민 — 끝이 구아니디늄.' },
+  His:{ c:'1펜',    h:'탄소 하나 + 오각 고리(이미다졸).' },
+  Asp:{ c:'1카',    h:'탄소 하나 + 카복실기. Glu의 2카와 한 칸 차이.' },
+  Glu:{ c:'2카',    h:'Asp(1카)보다 탄소가 하나 더.' }
+};
+
+/* the pairs worth memorising together */
+window.CODE_PAIRS = [
+  { a:'Leu', b:'Ile', note:'<b>112 ↔ 211</b> — 뒤집으면 서로가 된다. 실제로도 서로 이성질체.' },
+  { a:'Val', b:'Pro', note:'<b>12 ↔ 21</b> — 역시 뒤집힌 관계.' },
+  { a:'Ser', b:'Cys', note:'<b>1O ↔ 1S</b> — O 자리에 S만 바뀐 꼴.' },
+  { a:'Asp', b:'Glu', note:'<b>1카 → 2카</b> — 탄소 하나 차이.' },
+  { a:'Asn', b:'Gln', note:'<b>1CON → 2CON</b> — 위와 똑같은 규칙.' },
+  { a:'Phe', b:'Tyr', note:'<b>1헥 → 1헥O</b> — –OH 하나가 붙으면 타이로신.' }
+];
+
+(function () {
+  window.AA.forEach(function (a) {
+    var c = window.CODES[a.key];
+    if (c) { a.scode = c.c; a.scodeNote = c.h; }
+  });
+  /* the same code written without Korean, for typed answers */
+  window.romanCode = function (code) {
+    var out = String(code);
+    Object.keys(window.CODE_ROMAN).forEach(function (k) {
+      out = out.split(k).join(window.CODE_ROMAN[k]);
+    });
+    return out;
+  };
+})();

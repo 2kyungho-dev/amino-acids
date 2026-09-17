@@ -19,6 +19,7 @@ and use the self-contained `dist/amino-acids.html`.
 | `js/textbook.js` | **textbook** style — the same 20 as condensed stacked formulas in a class-coloured box |
 | `js/data.js` | names, codes, class, pKa, R groups, chemistry notes, etymology, memory-palace steps |
 | `js/journey.js` | the memory-palace walk-through tab |
+| `js/codes.js` | the structure-code sheet tab |
 | `js/store.js` | per-amino-acid scores and saved quiz settings (localStorage) |
 | `js/study.js` | the browsable card view and the reference table |
 | `js/quiz.js` | round building, the eight question types, scoring, results |
@@ -49,9 +50,23 @@ house in the same order as the `AA` array; each step is attached to its amino
 acid as `a.mnemo`. The **Journey** tab renders it grouped by room, with a
 "이름 가리기" mode that blurs the answer so you can test yourself on each cue.
 
+## Structure codes
+
+`CODES` in `js/data.js` maps each side chain to a short string — `1` per
+carbon, plus `O`, `S`, `N`, `CON`, `카`, `아`, `헥`, `펜` for what hangs off it.
+The **Code** tab prints the notation key, all twenty codes, and the pairs that
+are worth learning together (`112 ↔ 211`, `1O ↔ 1S`, `1카 → 2카`…), with
+self-test modes that blur either the code or the name. Two quiz types drill it
+in both directions.
+
+When typed, a code is accepted with or without the Korean symbols
+(`1hexpen` = `1헥펜`) and letter `O` and digit `0` are interchangeable. Typos
+are *not* forgiven here — the reversal pairs are the whole point, so `211` can
+never pass as `112`.
+
 ## Quiz
 
-Seven question types, listed in `TYPES` in `js/quiz.js`. With **주관식 · typed
+Nine question types, listed in `TYPES` in `js/quiz.js`. With **주관식 · typed
 answers** on (the default) every type except "pick the structure" becomes free
 text: a name is accepted as its full spelling, either code, or a documented
 alias, and a single typo is forgiven — but only when the answer is

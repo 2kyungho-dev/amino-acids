@@ -21,7 +21,9 @@ window.Quiz = (function () {
     { id: 'one2name',    label: '1-letter → name',   d: 'F, W, Q, K…' },
     { id: 'name2one',    label: 'Name → 1-letter',   d: 'The tricky half of the codes' },
     { id: 'name2three',  label: 'Name → 3-letter',   d: 'Asn vs Asp, Gln vs Glu' },
-    { id: 'category',    label: 'Class',             d: 'Nonpolar / polar / basic / acidic' }
+    { id: 'category',    label: 'Class',             d: 'Nonpolar / polar / basic / acidic' },
+    { id: 'name2scode',  label: 'Name → code',       d: '이름 → 구조 코드 (112, 1헥…)' },
+    { id: 'scode2name',  label: 'Code → name',       d: '구조 코드 → 이름' }
   ];
   var DEFAULT = {
     len: 20, types: TYPES.map(function (t) { return t.id; }),
@@ -35,6 +37,14 @@ window.Quiz = (function () {
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
   function strip(s) { return String(s).replace(/<[^>]+>/g, ''); }
   function norm(x) { return String(x).toLowerCase().replace(/[\s\-.,'’·]/g, ''); }
+  /* structure codes: letter O and digit 0 are interchangeable when typed */
+  function normCode(x) { return norm(x).replace(/o/g, '0'); }
+  function codeWords(a) { return [a.scode, window.romanCode(a.scode)]; }
+  function otherCodes(target) {
+    var out = [];
+    window.AA.forEach(function (a) { if (a.key !== target.key) out = out.concat(codeWords(a)); });
+    return out;
+  }
 
   function editDist(a, b) {
     var d = [], i, j;
@@ -170,6 +180,18 @@ window.Quiz = (function () {
                window.AA.filter(function (a) { return a.key !== target.key; }).map(function (a) { return a[field]; }));
       opts = codeDistractors(target, field).map(function (v) { return { t: v, ok: false, mono: true }; });
       opts.push({ t: target[field], ok: true, mono: true });
+    } else if (type === 'name2scode') {
+      q.prompt = '<b>' + target.name + '</b> 의 구조 코드는?';
+      typedAs(q, 'scode', target.scode, codeWords(target), otherCodes(target));
+      q.codeAnswer = true;
+      opts = shuffle(window.AA.filter(function (a) { return a.key !== target.key; }))
+             .slice(0, 3).map(function (a) { return { t: a.scode, ok: false, mono: true }; });
+      opts.push({ t: target.scode, ok: true, mono: true });
+    } else if (type === 'scode2name') {
+      q.prompt = '이 구조 코드는 어떤 아미노산?<span class="big">' + esc(target.scode) + '</span>';
+      typedAs(q, 'name', target.name, nameWords(target), otherNames(target));
+      opts = otherAA(target, 3, false).map(function (a) { return { t: a.name, ok: false }; });
+      opts.push({ t: target.name, ok: true });
     } else /* category */ {
       q.prompt = 'Which class does <b>' + target.name + '</b> belong to?';
       q.panel = panel(target);
@@ -178,7 +200,9 @@ window.Quiz = (function () {
     }
     q.options = type === 'category' ? opts : shuffle(opts);
     q.answer = (q.options.filter(function (o) { return o.ok; })[0] || {}).t;
-    q.explain = (type === 'name2one' || type === 'name2three' || type === 'one2name') ? target.codeNote
+    q.explain = (type === 'name2scode' || type === 'scode2name')
+                ? '<span style="font-family:var(--mono);color:var(--nonpolar)">' + esc(target.scode) + '</span> — ' + target.scodeNote
+              : (type === 'name2one' || type === 'name2three' || type === 'one2name') ? target.codeNote
               : type === 'category' ? (target.catNote || window.CAT[target.cat].desc)
               : target.chem;
     return q;
@@ -310,13 +334,15 @@ window.Quiz = (function () {
 
     var body;
     if (q.typed) {
-      var code = q.typedKind === 'code';
-      var ph = code ? (q.answerText.length === 1 ? '?' : '???')
-             : q.typedKind === 'cat' ? 'nonpolar / polar / basic / acidic'
+      var kind = q.typedKind;
+      var ph = kind === 'code' ? (q.answerText.length === 1 ? '?' : '???')
+             : kind === 'scode' ? '예: 112, 1헥, 1111아'
+             : kind === 'cat' ? 'nonpolar / polar / basic / acidic'
              : 'name, or its 1- or 3-letter code';
-      body = '<form class="typed' + (code ? '' : ' wide') + '" id="typedform">' +
-             '<input id="typedin" ' + (code ? 'maxlength="3" ' : '') + 'autocomplete="off" ' +
-             'autocapitalize="' + (code ? 'characters' : 'none') + '" spellcheck="false" ' +
+      var cls = kind === 'code' ? '' : kind === 'scode' ? ' scode' : ' wide';
+      body = '<form class="typed' + cls + '" id="typedform">' +
+             '<input id="typedin" ' + (kind === 'code' ? 'maxlength="3" ' : '') + 'autocomplete="off" ' +
+             'autocapitalize="' + (kind === 'code' ? 'characters' : 'none') + '" spellcheck="false" ' +
              'placeholder="' + ph + '">' +
              '<button class="btn primary" type="submit">Check</button></form>';
     } else {
@@ -400,10 +426,13 @@ window.Quiz = (function () {
     var q = st.qs[st.i], inp = document.getElementById('typedin');
     var given = inp.value.trim();
     if (!given) { inp.focus(); return; }
-    var g = norm(given), ok = false, fuzzy = false;
-    var dMine = bestDist(g, q.accept), dOther = bestDist(g, q.reject);
+    var f = q.codeAnswer ? normCode : norm;
+    var g = f(given), ok = false, fuzzy = false;
+    var acc = q.codeAnswer ? q.accept.map(normCode) : q.accept;
+    var rej = q.codeAnswer ? q.reject.map(normCode) : q.reject;
+    var dMine = bestDist(g, acc), dOther = bestDist(g, rej);
     if (dMine === 0) ok = true;
-    else if (dOther > 0 && dMine <= tolerance(g) && dMine < dOther) { ok = true; fuzzy = true; }
+    else if (!q.codeAnswer && dOther > 0 && dMine <= tolerance(g) && dMine < dOther) { ok = true; fuzzy = true; }
     inp.disabled = true;
     inp.classList.add(ok ? 'correct' : 'wrong');
     if (!ok) inp.value = q.answerText;

@@ -383,3 +383,54 @@ body[data-diagram="textbook"] .miss .mp{width:92px}
 .typed.wide{max-width:520px}
 .typed.wide input{font-size:1.05rem;text-align:left;text-transform:none;padding-left:16px;font-family:var(--serif)}
 .typed.wide input::placeholder{font-family:var(--mono);font-size:.8rem;color:var(--dim2)}
+
+/* ---------- structure code sheet ---------- */
+.ckeys{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin:16px 0 4px;
+  padding:14px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
+}
+.ckey{display:flex;align-items:baseline;gap:10px;min-width:0}
+.ckey b{
+  font-family:var(--mono);font-size:.95rem;color:var(--nonpolar);flex:none;
+  min-width:34px;text-align:center;background:var(--surface2);border:1px solid var(--line);
+  border-radius:6px;padding:2px 6px;
+}
+.ckey span{font-size:.86rem;color:var(--dim)}
+
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px;margin-top:12px}
+.ccard{
+  position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px;display:flex;flex-direction:column;gap:9px;cursor:pointer;transition:border-color .18s;
+}
+.ccard:hover{border-color:color-mix(in srgb,var(--acc) 45%,var(--line))}
+.ccode{
+  font-family:var(--mono);font-size:1.55rem;font-weight:600;letter-spacing:.04em;
+  color:var(--acc);text-align:center;padding:6px 0;transition:filter .2s,opacity .2s;
+}
+.cpanel{background:var(--paper);border-radius:8px;padding:3px;transition:filter .2s,opacity .2s}
+.cmeta{display:flex;align-items:center;gap:8px;transition:filter .2s,opacity .2s}
+.cmeta .cn{font-size:.98rem}
+.cmeta .cc{font-family:var(--mono);font-size:.72rem;color:var(--dim2)}
+.chint{margin:0;font-size:.8rem;color:var(--dim);line-height:1.5}
+.cveil{display:none}
+.hide-code .ccard:not(.shown) .ccode,
+.hide-name .ccard:not(.shown) .cpanel,
+.hide-name .ccard:not(.shown) .cmeta,
+.hide-name .ccard:not(.shown) .chint{filter:blur(9px);opacity:.45}
+.hide-code .ccard:not(.shown) .chint{filter:blur(6px);opacity:.4}
+.hide-code .ccard:not(.shown) .cveil,
+.hide-name .ccard:not(.shown) .cveil{
+  display:block;position:absolute;right:12px;top:10px;
+  font-family:var(--mono);font-size:.62rem;color:var(--dim2);
+}
+.cph{margin:34px 0 0;font-size:1rem}
+.cpairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:12px}
+.cpair{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 14px}
+.cpairhd{display:flex;align-items:center;gap:8px;font-size:.95rem;margin-bottom:5px}
+.cpairhd i{color:var(--dim2);font-style:normal}
+.cpair p{margin:0;font-size:.85rem;color:var(--dim);line-height:1.55}
+.cpair b{font-family:var(--mono);color:var(--text);font-weight:600}
+
+.typed.scode{max-width:400px}
+.typed.scode input{font-size:1.3rem;letter-spacing:.06em;text-transform:none}
+.typed.scode input::placeholder{font-size:.82rem;letter-spacing:0;color:var(--dim2)}
